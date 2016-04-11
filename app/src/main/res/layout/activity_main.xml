@@ -5,5 +5,15 @@
     android:layout_height="match_parent"
     tools:context="apripachkin.com.bucketdrops.MainActivity">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:background="@drawable/background"
+        android:scaleType="centerCrop" />
     <include layout="@layout/empty_drops" />
 </RelativeLayout>
