@@ -48,7 +48,6 @@ public class DialogAdd extends DialogFragment implements AddDialogView {
             @Override
             public void onClick(View v) {
                 String text = editText.getText().toString();
-                long currentTimeMillis = System.currentTimeMillis();
                 presenter.addItem(text);
             }
         });

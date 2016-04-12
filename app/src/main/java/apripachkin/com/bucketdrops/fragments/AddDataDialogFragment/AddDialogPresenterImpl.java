@@ -1,6 +1,6 @@
 package apripachkin.com.bucketdrops.fragments.AddDataDialogFragment;
 
-import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import apripachkin.com.bucketdrops.beans.Drop;
@@ -29,11 +29,12 @@ public class AddDialogPresenterImpl implements AddDialogPresenter {
             return;
         }
         Drop drop = new Drop(text, System.currentTimeMillis(), 0, false);
-        RealmConfiguration.Builder builder = new RealmConfiguration.Builder((Context) view);
+        RealmConfiguration.Builder builder = new RealmConfiguration.Builder(((Fragment) view).getActivity());
         Realm.setDefaultConfiguration(builder.build());
         Realm defaultInstance = Realm.getDefaultInstance();
         defaultInstance.beginTransaction();
-        defaultInstance.copyFromRealm(drop);
+        defaultInstance.copyToRealm(drop);
         defaultInstance.commitTransaction();
+        view.closeDialog();
     }
 }
