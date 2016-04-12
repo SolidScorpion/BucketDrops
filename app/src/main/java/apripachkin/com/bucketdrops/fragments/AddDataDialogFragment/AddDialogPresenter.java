@@ -5,4 +5,6 @@ package apripachkin.com.bucketdrops.fragments.AddDataDialogFragment;
  */
 public interface AddDialogPresenter {
     void closeDialog();
+
+    void addItem(String text);
 }

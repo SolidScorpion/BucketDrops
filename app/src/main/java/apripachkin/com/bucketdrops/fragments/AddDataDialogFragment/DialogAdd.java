@@ -44,6 +44,14 @@ public class DialogAdd extends DialogFragment implements AddDialogView {
                 presenter.closeDialog();
             }
         });
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = editText.getText().toString();
+                long currentTimeMillis = System.currentTimeMillis();
+                presenter.addItem(text);
+            }
+        });
     }
 
     private void initViews(View inflate) {
