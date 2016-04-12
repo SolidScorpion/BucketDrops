@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.buttonClick();
+                presenter.buttonClick(getSupportFragmentManager());
             }
         });
     }

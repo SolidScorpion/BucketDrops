@@ -1,7 +1,8 @@
 package apripachkin.com.bucketdrops.mainscreen;
 
-import android.content.Context;
-import android.widget.Toast;
+import android.support.v4.app.FragmentManager;
+
+import apripachkin.com.bucketdrops.fragments.AddDataDialogFragment.DialogAdd;
 
 /**
  * Created by root on 11.04.16.
@@ -14,7 +15,8 @@ public class MainScreenPresenterImpl implements MainScreenPresenter {
     }
 
     @Override
-    public void buttonClick() {
-        Toast.makeText((Context) view, "button was clicked!", Toast.LENGTH_SHORT).show();
+    public void buttonClick(FragmentManager manager) {
+        DialogAdd dialogAdd = new DialogAdd();
+        dialogAdd.show(manager, "AddFragment");
     }
 }
