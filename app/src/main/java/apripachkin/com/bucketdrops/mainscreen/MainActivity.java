@@ -10,12 +10,15 @@ import android.widget.Button;
 
 import apripachkin.com.bucketdrops.R;
 import apripachkin.com.bucketdrops.adapters.DropsAdapter;
+import apripachkin.com.bucketdrops.beans.Drop;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity implements MainScreenView {
     private Toolbar toolbar;
     private Button addButton;
     private RecyclerView recyclerView;
     private MainScreenPresenter presenter;
+    private DropsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,8 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
         recyclerView = (RecyclerView) findViewById(R.id.rv_drops);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setAdapter(new DropsAdapter(this));
+        adapter = new DropsAdapter(this, presenter.getData());
+        recyclerView.setAdapter(adapter);
         addButton = (Button) findViewById(R.id.btn_add);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,4 +45,20 @@ public class MainActivity extends AppCompatActivity implements MainScreenView {
         });
     }
 
+    @Override
+    protected void onStop() {
+        presenter.onStop();
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        presenter.onStart();
+        super.onStart();
+    }
+
+    @Override
+    public void showData(RealmResults<Drop> data) {
+        adapter.updateData(data);
+    }
 }

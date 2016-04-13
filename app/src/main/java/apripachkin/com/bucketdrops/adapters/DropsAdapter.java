@@ -6,21 +6,26 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.ArrayList;
-
 import apripachkin.com.bucketdrops.R;
+import apripachkin.com.bucketdrops.beans.Drop;
 import apripachkin.com.bucketdrops.viewholders.DropsViewHolder;
+import io.realm.RealmResults;
 
 /**
  * Created by root on 12.04.16.
  */
 public class DropsAdapter extends RecyclerView.Adapter<DropsViewHolder> {
     LayoutInflater layoutInflater;
-    private ArrayList<String> content = new ArrayList<>();
+    private RealmResults<Drop> content;
 
-    public DropsAdapter(Context context) {
+    public DropsAdapter(Context context, RealmResults<Drop> content) {
         layoutInflater = LayoutInflater.from(context);
-        content.addAll(generateDummyContent());
+        updateData(content);
+    }
+
+    public void updateData(RealmResults<Drop> data) {
+        content = data;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -31,15 +36,8 @@ public class DropsAdapter extends RecyclerView.Adapter<DropsViewHolder> {
 
     @Override
     public void onBindViewHolder(DropsViewHolder holder, int position) {
-        holder.tv_drop.setText(content.get(position));
-    }
-
-    private ArrayList<String> generateDummyContent() {
-        ArrayList<String> resultList = new ArrayList<>(100);
-        for (int i = 1; i < 101; i++) {
-            resultList.add("Item #" + i);
-        }
-        return resultList;
+        Drop drop = content.get(position);
+        holder.tv_drop.setText(drop.getWhat());
     }
 
     @Override

@@ -7,8 +7,6 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/tv_dialog_marginB"
-        android:layout_marginTop="@dimen/tv_dialog_marginT"
         android:text="@string/add_it"
         android:textSize="@dimen/tv_title_font_size" />
 
@@ -35,7 +33,7 @@
     <DatePicker
         android:id="@+id/bpv_date"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="350dp"
         android:layout_below="@id/et_drop" />
 
     <Button
