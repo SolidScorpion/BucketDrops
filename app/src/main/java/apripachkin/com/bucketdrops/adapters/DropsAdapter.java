@@ -9,13 +9,16 @@ import android.view.ViewGroup;
 import apripachkin.com.bucketdrops.R;
 import apripachkin.com.bucketdrops.beans.Drop;
 import apripachkin.com.bucketdrops.viewholders.DropsViewHolder;
+import apripachkin.com.bucketdrops.viewholders.FooterHolder;
 import io.realm.RealmResults;
 
 /**
  * Created by root on 12.04.16.
  */
-public class DropsAdapter extends RecyclerView.Adapter<DropsViewHolder> {
-    LayoutInflater layoutInflater;
+public class DropsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int ITEM = 0;
+    private static final int FOOTER = 1;
+    private LayoutInflater layoutInflater;
     private RealmResults<Drop> content;
 
     public DropsAdapter(Context context, RealmResults<Drop> content) {
@@ -29,19 +32,35 @@ public class DropsAdapter extends RecyclerView.Adapter<DropsViewHolder> {
     }
 
     @Override
-    public DropsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View inflate = layoutInflater.inflate(R.layout.drop, parent, false);
-        return new DropsViewHolder(inflate);
+    public int getItemViewType(int position) {
+        if (content == null || position < content.size()) {
+            return ITEM;
+        }
+        return FOOTER;
     }
 
     @Override
-    public void onBindViewHolder(DropsViewHolder holder, int position) {
-        Drop drop = content.get(position);
-        holder.tv_drop.setText(drop.getWhat());
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == FOOTER) {
+            View inflate = layoutInflater.inflate(R.layout.button_footer, parent, false);
+            return new FooterHolder(inflate);
+        } else {
+            View inflate = layoutInflater.inflate(R.layout.drop, parent, false);
+            return new DropsViewHolder(inflate);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof DropsViewHolder) {
+            DropsViewHolder dropsViewHolder = (DropsViewHolder) holder;
+            Drop drop = content.get(position);
+            dropsViewHolder.tv_drop.setText(drop.getWhat());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return content.size();
+        return content.size() + 1;
     }
 }
