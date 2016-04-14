@@ -17,11 +17,13 @@ import io.realm.RealmResults;
  */
 public class DropsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int ITEM = 0;
-    private static final int FOOTER = 1;
+    public static final int FOOTER = 1;
     private LayoutInflater layoutInflater;
     private RealmResults<Drop> content;
+    private DialogAddListener addListener;
 
-    public DropsAdapter(Context context, RealmResults<Drop> content) {
+    public DropsAdapter(Context context, RealmResults<Drop> content, DialogAddListener addListener) {
+        this.addListener = addListener;
         layoutInflater = LayoutInflater.from(context);
         updateData(content);
     }
@@ -56,6 +58,14 @@ public class DropsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             DropsViewHolder dropsViewHolder = (DropsViewHolder) holder;
             Drop drop = content.get(position);
             dropsViewHolder.tv_drop.setText(drop.getWhat());
+        } else {
+            FooterHolder footerHolder = (FooterHolder) holder;
+            footerHolder.btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    addListener.add();
+                }
+            });
         }
     }
 
