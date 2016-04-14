@@ -10,20 +10,25 @@ import apripachkin.com.bucketdrops.R;
 import apripachkin.com.bucketdrops.beans.Drop;
 import apripachkin.com.bucketdrops.viewholders.DropsViewHolder;
 import apripachkin.com.bucketdrops.viewholders.FooterHolder;
+import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
  * Created by root on 12.04.16.
  */
-public class DropsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class DropsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements SwipeListener {
     private static final int ITEM = 0;
     public static final int FOOTER = 1;
     private LayoutInflater layoutInflater;
     private RealmResults<Drop> content;
     private DialogAddListener addListener;
+    private Realm realmDb;
+    private RealmResults<Drop> realmResults;
 
-    public DropsAdapter(Context context, RealmResults<Drop> content, DialogAddListener addListener) {
+    public DropsAdapter(Context context, RealmResults<Drop> content, DialogAddListener addListener, Realm realmDb, RealmResults<Drop> realmResults) {
         this.addListener = addListener;
+        this.realmDb = realmDb;
+        this.realmResults = realmResults;
         layoutInflater = LayoutInflater.from(context);
         updateData(content);
     }
@@ -71,6 +76,19 @@ public class DropsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemCount() {
+        if (content == null || content.size() == 0) {
+            return 0;
+        }
         return content.size() + 1;
+    }
+
+    @Override
+    public void onSwipe(int position) {
+        if (position < realmResults.size()) {
+            realmDb.beginTransaction();
+            realmResults.get(position).removeFromRealm();
+            realmDb.commitTransaction();
+            notifyItemRemoved(position);
+        }
     }
 }

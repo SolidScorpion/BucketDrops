@@ -3,6 +3,7 @@ package apripachkin.com.bucketdrops.mainscreen;
 import android.support.v4.app.FragmentManager;
 
 import apripachkin.com.bucketdrops.beans.Drop;
+import io.realm.Realm;
 import io.realm.RealmResults;
 
 /**
@@ -13,4 +14,5 @@ public interface MainScreenPresenter {
     void onStart();
     void onStop();
     RealmResults<Drop> getData();
+    Realm getDB();
 }

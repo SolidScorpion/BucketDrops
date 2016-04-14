@@ -25,7 +25,7 @@ public class MainScreenPresenterImpl implements MainScreenPresenter {
 
     public MainScreenPresenterImpl(MainScreenView view) {
         this.view = view;
-        realmDb = Realm.getDefaultInstance();
+        realmDb = getDB();
     }
 
     @Override
@@ -50,5 +50,13 @@ public class MainScreenPresenterImpl implements MainScreenPresenter {
             data = realmDb.where(Drop.class).findAllAsync();
         }
         return data;
+    }
+
+    @Override
+    public Realm getDB() {
+        if (realmDb == null) {
+            realmDb = Realm.getDefaultInstance();
+        }
+        return realmDb;
     }
 }
