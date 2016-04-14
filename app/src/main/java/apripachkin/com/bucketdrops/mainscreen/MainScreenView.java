@@ -1,5 +1,7 @@
 package apripachkin.com.bucketdrops.mainscreen;
 
+import android.support.v4.app.FragmentManager;
+
 import apripachkin.com.bucketdrops.beans.Drop;
 import io.realm.RealmResults;
 
@@ -8,4 +10,8 @@ import io.realm.RealmResults;
  */
 public interface MainScreenView {
     void showData(RealmResults<Drop> data);
+
+    void showAddDialog(FragmentManager fragmentManager);
+
+    void showMarkDialog(FragmentManager fragmentManager, int position);
 }

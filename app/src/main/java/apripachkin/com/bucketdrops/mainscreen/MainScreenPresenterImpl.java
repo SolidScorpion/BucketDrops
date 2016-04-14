@@ -1,9 +1,6 @@
 package apripachkin.com.bucketdrops.mainscreen;
 
-import android.support.v4.app.FragmentManager;
-
 import apripachkin.com.bucketdrops.beans.Drop;
-import apripachkin.com.bucketdrops.fragments.AddDataDialogFragment.DialogAdd;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -12,9 +9,9 @@ import io.realm.RealmResults;
  * Created by root on 11.04.16.
  */
 public class MainScreenPresenterImpl implements MainScreenPresenter {
+    public static final String TAG = MainScreenPresenter.class.getName();
     private MainScreenView view;
     private Realm realmDb;
-    public static final String TAG = MainScreenPresenter.class.getName();
     private RealmResults<Drop> data;
     private RealmChangeListener changeListener = new RealmChangeListener() {
         @Override
@@ -28,11 +25,6 @@ public class MainScreenPresenterImpl implements MainScreenPresenter {
         realmDb = getDB();
     }
 
-    @Override
-    public void buttonClick(FragmentManager manager) {
-        DialogAdd dialogAdd = new DialogAdd();
-        dialogAdd.show(manager, "AddFragment");
-    }
 
     @Override
     public void onStart() {

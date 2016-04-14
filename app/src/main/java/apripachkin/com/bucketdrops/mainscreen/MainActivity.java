@@ -1,6 +1,7 @@
 package apripachkin.com.bucketdrops.mainscreen;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -12,12 +13,15 @@ import apripachkin.com.bucketdrops.R;
 import apripachkin.com.bucketdrops.adapters.DialogAddListener;
 import apripachkin.com.bucketdrops.adapters.Divider;
 import apripachkin.com.bucketdrops.adapters.DropsAdapter;
+import apripachkin.com.bucketdrops.adapters.MarkListener;
 import apripachkin.com.bucketdrops.adapters.SimpleTouchCallback;
 import apripachkin.com.bucketdrops.beans.Drop;
+import apripachkin.com.bucketdrops.fragments.AddDataDialogFragment.DialogAdd;
+import apripachkin.com.bucketdrops.fragments.DialogMarkFragment.DialogMarkFragment;
 import apripachkin.com.bucketdrops.widgets.BucketRecyclerView;
 import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity implements MainScreenView, DialogAddListener {
+public class MainActivity extends AppCompatActivity implements MainScreenView, DialogAddListener, MarkListener {
     private Toolbar toolbar;
     private Button addButton;
     private View emptyView;
@@ -38,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements MainScreenView, D
         setSupportActionBar(toolbar);
         recyclerView = (BucketRecyclerView) findViewById(R.id.rv_drops);
         emptyView = findViewById(R.id.empty_drops);
-        adapter = new DropsAdapter(this, presenter.getData(), this, presenter.getDB(), presenter.getData());
+        adapter = new DropsAdapter(this, presenter.getData(), this, presenter.getDB(), presenter.getData(), this);
         recyclerView.hideIfEmpty(toolbar);
         recyclerView.showIfEmpty(emptyView);
         recyclerView.setAdapter(adapter);
@@ -50,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements MainScreenView, D
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.buttonClick(getSupportFragmentManager());
+                showAddDialog(getSupportFragmentManager());
             }
         });
     }
@@ -73,7 +77,24 @@ public class MainActivity extends AppCompatActivity implements MainScreenView, D
     }
 
     @Override
+    public void showAddDialog(FragmentManager fragmentManager) {
+        DialogAdd dialogAdd = new DialogAdd();
+        dialogAdd.show(fragmentManager, "AddFragment");
+    }
+
+    @Override
+    public void showMarkDialog(FragmentManager fragmentManager, int position) {
+        DialogMarkFragment instance = DialogMarkFragment.getInstance(position);
+        instance.show(fragmentManager, "DialogMark");
+    }
+
+    @Override
     public void add() {
-        presenter.buttonClick(getSupportFragmentManager());
+        showAddDialog(getSupportFragmentManager());
+    }
+
+    @Override
+    public void onMark(int position) {
+        showMarkDialog(getSupportFragmentManager(), position);
     }
 }
