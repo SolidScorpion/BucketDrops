@@ -65,6 +65,7 @@ public class DropsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             DropsViewHolder dropsViewHolder = (DropsViewHolder) holder;
             Drop drop = content.get(position);
             dropsViewHolder.tv_drop.setText(drop.getWhat());
+            dropsViewHolder.setBackground(drop.isCompleted());
         } else {
             FooterHolder footerHolder = (FooterHolder) holder;
             footerHolder.btn.setOnClickListener(new View.OnClickListener() {
@@ -86,11 +87,24 @@ public class DropsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public void onSwipe(int position) {
-        if (position < realmResults.size()) {
+        if (isDropItem(position)) {
             realmDb.beginTransaction();
             realmResults.get(position).removeFromRealm();
             realmDb.commitTransaction();
             notifyItemRemoved(position);
+        }
+    }
+
+    private boolean isDropItem(int position) {
+        return position < realmResults.size();
+    }
+
+    public void markComplete(int position) {
+        if (isDropItem(position)) {
+            realmDb.beginTransaction();
+            realmResults.get(position).setCompleted(true);
+            realmDb.commitTransaction();
+            notifyItemChanged(position);
         }
     }
 }

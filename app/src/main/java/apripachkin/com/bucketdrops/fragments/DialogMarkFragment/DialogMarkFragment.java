@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import apripachkin.com.bucketdrops.R;
+import apripachkin.com.bucketdrops.adapters.CompleteListener;
 
 /**
  * Created by root on 14.04.16.
@@ -21,6 +22,7 @@ public class DialogMarkFragment extends DialogFragment implements DialogMarkFrag
     private Button button;
     private DialogMarkFragmentPresenter presenter;
     private int position;
+    private CompleteListener completeListener;
 
     public static DialogMarkFragment getInstance(int position) {
         Bundle args = new Bundle();
@@ -42,7 +44,9 @@ public class DialogMarkFragment extends DialogFragment implements DialogMarkFrag
         imgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (completeListener != null) {
+                    completeListener.onComplete(position);
+                }
             }
         });
         button = (Button) view.findViewById(R.id.btn_completed);
@@ -62,5 +66,9 @@ public class DialogMarkFragment extends DialogFragment implements DialogMarkFrag
     @Override
     public void close() {
         dismiss();
+    }
+
+    public void setCompleteListener(CompleteListener completeListener) {
+        this.completeListener = completeListener;
     }
 }

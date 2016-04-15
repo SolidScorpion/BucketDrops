@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import apripachkin.com.bucketdrops.R;
+import apripachkin.com.bucketdrops.adapters.CompleteListener;
 import apripachkin.com.bucketdrops.adapters.DialogAddListener;
 import apripachkin.com.bucketdrops.adapters.Divider;
 import apripachkin.com.bucketdrops.adapters.DropsAdapter;
@@ -28,6 +29,12 @@ public class MainActivity extends AppCompatActivity implements MainScreenView, D
     private BucketRecyclerView recyclerView;
     private MainScreenPresenter presenter;
     private DropsAdapter adapter;
+    private CompleteListener completeListener = new CompleteListener() {
+        @Override
+        public void onComplete(int position) {
+            adapter.markComplete(position);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements MainScreenView, D
     @Override
     public void showMarkDialog(FragmentManager fragmentManager, int position) {
         DialogMarkFragment instance = DialogMarkFragment.getInstance(position);
+        instance.setCompleteListener(completeListener);
         instance.show(fragmentManager, "DialogMark");
     }
 
