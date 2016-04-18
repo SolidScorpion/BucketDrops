@@ -13,11 +13,5 @@ public interface MainScreenPresenter {
     RealmResults<Drop> getData();
     Realm getDB();
 
-    void sortAscending();
-
-    void sortDescending();
-
-    void sortComplete();
-
-    void sortIncomplete();
+    void sort(int filterOption);
 }

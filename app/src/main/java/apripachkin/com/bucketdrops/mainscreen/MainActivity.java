@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import apripachkin.com.bucketdrops.Filter;
 import apripachkin.com.bucketdrops.R;
 import apripachkin.com.bucketdrops.adapters.CompleteListener;
 import apripachkin.com.bucketdrops.adapters.DialogAddListener;
@@ -77,24 +78,34 @@ public class MainActivity extends AppCompatActivity implements MainScreenView, D
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
+        boolean handled = true;
+        int defaultOption = Filter.NONE;
         switch (itemId) {
             case R.id.action_add:
                 showAddDialog(getSupportFragmentManager());
-                return true;
+                break;
             case R.id.action_show_complete:
-                presenter.sortComplete();
-                return true;
+                defaultOption = Filter.COMPLETED;
+                presenter.sort(defaultOption);
+                break;
             case R.id.action_show_incomplete:
-                presenter.sortIncomplete();
-                return true;
+                defaultOption = Filter.INCOMPLETE;
+                presenter.sort(defaultOption);
+                break;
             case R.id.action_sort_ascending_date:
-                presenter.sortAscending();
-                return true;
+                defaultOption = Filter.LEAST_TIME_LEFT;
+                presenter.sort(defaultOption);
+                break;
             case R.id.action_sort_descending_date:
-                presenter.sortDescending();
-                return true;
+                defaultOption = Filter.MOST_TIME_LEFT;
+                presenter.sort(defaultOption);
+                break;
+            default:
+                presenter.sort(defaultOption);
+                handled = false;
+                break;
         }
-        return super.onOptionsItemSelected(item);
+        return handled;
     }
 
     @Override

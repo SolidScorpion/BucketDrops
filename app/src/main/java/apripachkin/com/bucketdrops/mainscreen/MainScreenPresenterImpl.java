@@ -1,6 +1,10 @@
 package apripachkin.com.bucketdrops.mainscreen;
 
+import android.content.Context;
+
+import apripachkin.com.bucketdrops.Filter;
 import apripachkin.com.bucketdrops.beans.Drop;
+import apripachkin.com.bucketdrops.utils.SharedPreferencesUtil;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -16,6 +20,7 @@ public class MainScreenPresenterImpl implements MainScreenPresenter {
     private static final int COMPLETED = 2;
     private static final int INCOMPLETED = 3;
     private MainScreenView view;
+    private SharedPreferencesUtil sharedPreferencesUtil;
     private Realm realmDb;
     private RealmResults<Drop> data;
     private RealmChangeListener changeListener = new RealmChangeListener() {
@@ -28,6 +33,7 @@ public class MainScreenPresenterImpl implements MainScreenPresenter {
     public MainScreenPresenterImpl(MainScreenView view) {
         this.view = view;
         realmDb = getDB();
+        sharedPreferencesUtil = new SharedPreferencesUtil((Context) view);
     }
 
 
@@ -43,9 +49,7 @@ public class MainScreenPresenterImpl implements MainScreenPresenter {
 
     @Override
     public RealmResults<Drop> getData() {
-        if (data == null) {
-            data = realmDb.where(Drop.class).findAllAsync();
-        }
+        load();
         return data;
     }
 
@@ -57,41 +61,34 @@ public class MainScreenPresenterImpl implements MainScreenPresenter {
         return realmDb;
     }
 
-    private void sort(int state) {
+    public void sort(int state) {
         switch (state) {
-            case ASCENDING:
+            case Filter.NONE:
+                sharedPreferencesUtil.save(Filter.NONE);
+                data = realmDb.where(Drop.class).findAllAsync();
+                break;
+            case Filter.LEAST_TIME_LEFT:
+                sharedPreferencesUtil.save(Filter.LEAST_TIME_LEFT);
                 data = realmDb.where(Drop.class).findAllSortedAsync("when");
                 break;
-            case DESCENDING:
+            case Filter.MOST_TIME_LEFT:
+                sharedPreferencesUtil.save(Filter.MOST_TIME_LEFT);
                 data = realmDb.where(Drop.class).findAllSortedAsync("when", Sort.DESCENDING);
                 break;
-            case COMPLETED:
-                data = realmDb.where(Drop.class).equalTo("completed", true).findAllAsync();
+            case Filter.COMPLETED:
+                sharedPreferencesUtil.save(Filter.COMPLETED);
+                data = realmDb.where(Drop.class).equalTo("isCompleted", true).findAllAsync();
                 break;
-            case INCOMPLETED:
-                data = realmDb.where(Drop.class).equalTo("completed", false).findAllAsync();
+            case Filter.INCOMPLETE:
+                sharedPreferencesUtil.save(Filter.INCOMPLETE);
+                data = realmDb.where(Drop.class).equalTo("isCompleted", false).findAllAsync();
                 break;
         }
         data.addChangeListener(changeListener);
     }
 
-    @Override
-    public void sortAscending() {
-        sort(ASCENDING);
+    private void load() {
+        sort(sharedPreferencesUtil.load());
     }
 
-    @Override
-    public void sortDescending() {
-        sort(DESCENDING);
-    }
-
-    @Override
-    public void sortComplete() {
-        sort(COMPLETED);
-    }
-
-    @Override
-    public void sortIncomplete() {
-        sort(INCOMPLETED);
-    }
 }
