@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -67,15 +69,44 @@ public class MainActivity extends AppCompatActivity implements MainScreenView, D
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.action_add:
+                showAddDialog(getSupportFragmentManager());
+                return true;
+            case R.id.action_show_complete:
+                presenter.sortComplete();
+                return true;
+            case R.id.action_show_incomplete:
+                presenter.sortIncomplete();
+                return true;
+            case R.id.action_sort_ascending_date:
+                presenter.sortAscending();
+                return true;
+            case R.id.action_sort_descending_date:
+                presenter.sortDescending();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onStop() {
-        presenter.onStop();
         super.onStop();
+        presenter.onStop();
     }
 
     @Override
     protected void onStart() {
-        presenter.onStart();
         super.onStart();
+        presenter.onStart();
     }
 
     @Override

@@ -2,6 +2,7 @@ package apripachkin.com.bucketdrops.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +66,11 @@ public class DropsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             DropsViewHolder dropsViewHolder = (DropsViewHolder) holder;
             Drop drop = content.get(position);
             dropsViewHolder.tv_drop.setText(drop.getWhat());
+            dropsViewHolder.tv_when.setText(
+                    DateUtils.getRelativeTimeSpanString(
+                            drop.getWhen(), System.currentTimeMillis(), DateUtils.DAY_IN_MILLIS, DateUtils.FORMAT_ABBREV_RELATIVE
+                    )
+            );
             dropsViewHolder.setBackground(drop.isCompleted());
         } else {
             FooterHolder footerHolder = (FooterHolder) holder;

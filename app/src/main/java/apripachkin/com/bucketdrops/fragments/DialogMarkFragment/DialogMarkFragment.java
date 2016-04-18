@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import apripachkin.com.bucketdrops.R;
 import apripachkin.com.bucketdrops.adapters.CompleteListener;
@@ -44,22 +43,22 @@ public class DialogMarkFragment extends DialogFragment implements DialogMarkFrag
         imgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (completeListener != null) {
-                    completeListener.onComplete(position);
-                }
+                dismiss();
             }
         });
         button = (Button) view.findViewById(R.id.btn_completed);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (completeListener != null) {
+                    completeListener.onComplete(position);
+                    dismiss();
+                }
             }
         });
         Bundle arguments = getArguments();
         if (arguments != null) {
             position = arguments.getInt(POSITION);
-            Toast.makeText(getActivity(), "Pos: " + position, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -48,7 +48,7 @@ public class DialogAdd extends DialogFragment implements AddDialogView {
             @Override
             public void onClick(View v) {
                 String text = editText.getText().toString();
-                presenter.addItem(text);
+                presenter.addItem(text, datePicker);
             }
         });
     }

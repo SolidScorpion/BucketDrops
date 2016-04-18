@@ -12,4 +12,12 @@ public interface MainScreenPresenter {
     void onStop();
     RealmResults<Drop> getData();
     Realm getDB();
+
+    void sortAscending();
+
+    void sortDescending();
+
+    void sortComplete();
+
+    void sortIncomplete();
 }

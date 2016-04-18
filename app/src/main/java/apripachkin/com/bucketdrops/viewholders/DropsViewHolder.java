@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import apripachkin.com.bucketdrops.R;
 import apripachkin.com.bucketdrops.adapters.MarkListener;
+import apripachkin.com.bucketdrops.utils.Util;
 
 /**
  * Created by root on 12.04.16.
@@ -17,6 +18,7 @@ public class DropsViewHolder extends RecyclerView.ViewHolder {
     public TextView tv_drop;
     public TextView tv_when;
     private Context context;
+    private View itemView;
 
     public DropsViewHolder(View itemView, final MarkListener listener) {
         super(itemView);
@@ -26,6 +28,7 @@ public class DropsViewHolder extends RecyclerView.ViewHolder {
                 listener.onMark(getAdapterPosition());
             }
         });
+        this.itemView = itemView;
         context = itemView.getContext();
         tv_drop = (TextView) itemView.findViewById(R.id.tv_what);
         tv_when = (TextView) itemView.findViewById(R.id.tv_when);
@@ -38,7 +41,7 @@ public class DropsViewHolder extends RecyclerView.ViewHolder {
         } else {
             drawable = ContextCompat.getDrawable(context, R.drawable.bg_row_drop);
         }
-
+        Util.setBackground(drawable, itemView);
     }
 
 }
