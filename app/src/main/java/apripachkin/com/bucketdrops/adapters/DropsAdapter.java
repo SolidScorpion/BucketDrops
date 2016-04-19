@@ -7,10 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import apripachkin.com.bucketdrops.Filter;
 import apripachkin.com.bucketdrops.R;
 import apripachkin.com.bucketdrops.beans.Drop;
+import apripachkin.com.bucketdrops.utils.SharedPreferencesUtil;
 import apripachkin.com.bucketdrops.viewholders.DropsViewHolder;
 import apripachkin.com.bucketdrops.viewholders.FooterHolder;
+import apripachkin.com.bucketdrops.viewholders.NoItemsViewHolder;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -18,8 +21,13 @@ import io.realm.RealmResults;
  * Created by root on 12.04.16.
  */
 public class DropsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements SwipeListener {
-    public static final int FOOTER = 1;
+    public static final int FOOTER = 2;
+    public static final int NO_ITEM = 1;
     private static final int ITEM = 0;
+    private static final int COUNT_FOOTER = 1;
+    private static final int COUNT_NO_ITEMS = 1;
+    private int sortOption;
+    private SharedPreferencesUtil sharedPreferencesUtil;
     private LayoutInflater layoutInflater;
     private RealmResults<Drop> content;
     private DialogAddListener addListener;
@@ -32,32 +40,60 @@ public class DropsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         this.realmDb = realmDb;
         this.realmResults = realmResults;
         this.markListener = markListener;
+        sharedPreferencesUtil = new SharedPreferencesUtil(context);
         layoutInflater = LayoutInflater.from(context);
         updateData(content);
     }
 
     public void updateData(RealmResults<Drop> data) {
         content = data;
+        sortOption = sharedPreferencesUtil.load();
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (content == null || position < content.size()) {
-            return ITEM;
+        if (!realmResults.isEmpty()) {
+            if (isDropItem(position)) {
+                return ITEM;
+            } else {
+                return FOOTER;
+            }
+        } else {
+            if (sortOption == Filter.COMPLETED ||
+                    sortOption == Filter.INCOMPLETE) {
+                if (position == 0) {
+                    return NO_ITEM;
+                } else {
+                    return FOOTER;
+                }
+            } else {
+                return ITEM;
+            }
         }
-        return FOOTER;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View inflate;
         if (viewType == FOOTER) {
-            View inflate = layoutInflater.inflate(R.layout.button_footer, parent, false);
+            inflate = layoutInflater.inflate(R.layout.button_footer, parent, false);
             return new FooterHolder(inflate);
-        } else {
-            View inflate = layoutInflater.inflate(R.layout.drop, parent, false);
+        } else if (viewType == ITEM) {
+            inflate = layoutInflater.inflate(R.layout.drop, parent, false);
             return new DropsViewHolder(inflate, markListener);
+        } else {
+            inflate = layoutInflater.inflate(R.layout.no_item_to_display, parent, false);
+            return new NoItemsViewHolder(inflate);
         }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (isDropItem(position)) {
+            return realmResults.get(position).getAdded();
+        }
+        return RecyclerView.NO_ID;
     }
 
     @Override
@@ -72,7 +108,7 @@ public class DropsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     )
             );
             dropsViewHolder.setBackground(drop.isCompleted());
-        } else {
+        } else if (holder instanceof FooterHolder) {
             FooterHolder footerHolder = (FooterHolder) holder;
             footerHolder.btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -85,10 +121,15 @@ public class DropsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        if (content == null || content.size() == 0) {
+        if (!realmResults.isEmpty()) {
+            return realmResults.size() + COUNT_FOOTER;
+        }
+        if (sortOption == Filter.LEAST_TIME_LEFT ||
+                sortOption == Filter.MOST_TIME_LEFT ||
+                sortOption == Filter.NONE) {
             return 0;
         }
-        return content.size() + 1;
+        return COUNT_NO_ITEMS + COUNT_FOOTER;
     }
 
     @Override

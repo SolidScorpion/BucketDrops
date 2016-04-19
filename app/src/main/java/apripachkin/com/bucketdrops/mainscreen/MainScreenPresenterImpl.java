@@ -14,11 +14,6 @@ import io.realm.Sort;
  * Created by root on 11.04.16.
  */
 public class MainScreenPresenterImpl implements MainScreenPresenter {
-    public static final String TAG = MainScreenPresenter.class.getName();
-    private static final int ASCENDING = 0;
-    private static final int DESCENDING = 1;
-    private static final int COMPLETED = 2;
-    private static final int INCOMPLETED = 3;
     private MainScreenView view;
     private SharedPreferencesUtil sharedPreferencesUtil;
     private Realm realmDb;

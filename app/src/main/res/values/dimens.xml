@@ -22,4 +22,6 @@
     <dimen name="dialog_check_margin">96dp</dimen>
     <dimen name="dialog_check_padding">16dp</dimen>
     <dimen name="dialog_padding">24dp</dimen>
+    <dimen name="no_item_paddingB">22dp</dimen>
+    <dimen name="no_item_paddingT">22dp</dimen>
 </resources>

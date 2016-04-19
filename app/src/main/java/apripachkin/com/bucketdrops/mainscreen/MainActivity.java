@@ -53,9 +53,11 @@ public class MainActivity extends AppCompatActivity implements MainScreenView, D
         recyclerView = (BucketRecyclerView) findViewById(R.id.rv_drops);
         emptyView = findViewById(R.id.empty_drops);
         adapter = new DropsAdapter(this, presenter.getData(), this, presenter.getDB(), presenter.getData(), this);
+        adapter.setHasStableIds(true);
         recyclerView.hideIfEmpty(toolbar);
         recyclerView.showIfEmpty(emptyView);
         recyclerView.setAdapter(adapter);
+//        recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new Divider(this, LinearLayoutManager.VERTICAL));
         SimpleTouchCallback simpleTouchCallback = new SimpleTouchCallback(adapter);
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleTouchCallback);
@@ -100,8 +102,9 @@ public class MainActivity extends AppCompatActivity implements MainScreenView, D
                 defaultOption = Filter.MOST_TIME_LEFT;
                 presenter.sort(defaultOption);
                 break;
-            default:
+            case R.id.action_none:
                 presenter.sort(defaultOption);
+            default:
                 handled = false;
                 break;
         }

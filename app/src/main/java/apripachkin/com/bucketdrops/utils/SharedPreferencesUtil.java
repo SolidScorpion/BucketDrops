@@ -10,7 +10,6 @@ import apripachkin.com.bucketdrops.Filter;
  */
 public class SharedPreferencesUtil {
     public static final String FILTER = "FILTER";
-    private SharedPreferencesUtil instance;
     private SharedPreferences preferences;
 
     public SharedPreferencesUtil(Context context) {
