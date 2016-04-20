@@ -3,24 +3,21 @@ package apripachkin.com.bucketdrops.beans;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-/**
- * Created by root on 12.04.16.
- */
 public class Drop extends RealmObject {
     private String what;
     @PrimaryKey
     private long added;
     private long when;
-    private boolean isCompleted;
+    private boolean completed;
 
-    public Drop() {
-    }
-
-    public Drop(String what, long added, long when, boolean isCompleted) {
+    public Drop(String what, long added, long when, boolean completed) {
         this.what = what;
         this.added = added;
         this.when = when;
-        this.isCompleted = isCompleted;
+        this.completed = completed;
+    }
+
+    public Drop() {
     }
 
     public String getWhat() {
@@ -48,10 +45,10 @@ public class Drop extends RealmObject {
     }
 
     public boolean isCompleted() {
-        return isCompleted;
+        return completed;
     }
 
     public void setCompleted(boolean completed) {
-        isCompleted = completed;
+        this.completed = completed;
     }
 }

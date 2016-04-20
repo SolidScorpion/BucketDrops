@@ -10,13 +10,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import apripachkin.com.bucketdrops.utils.Util;
+import apripachkin.com.bucketdrops.extras.Util;
 
-/**
- * Created by root on 13.04.16.
- */
 public class BucketRecyclerView extends RecyclerView {
-    private AdapterDataObserver dataObserver = new AdapterDataObserver() {
+
+    private List<View> mNonEmptyViews = Collections.emptyList();
+    private List<View> mEmptyViews = Collections.emptyList();
+    private AdapterDataObserver mObserver = new AdapterDataObserver() {
         @Override
         public void onChanged() {
             toggleViews();
@@ -47,8 +47,7 @@ public class BucketRecyclerView extends RecyclerView {
             toggleViews();
         }
     };
-    private List<View> emptyViews = Collections.emptyList();
-    private List<View> nonEmptyViews = Collections.emptyList();
+
     public BucketRecyclerView(Context context) {
         super(context);
     }
@@ -61,42 +60,44 @@ public class BucketRecyclerView extends RecyclerView {
         super(context, attrs, defStyle);
     }
 
-    @Override
-    public void setAdapter(Adapter adapter) {
-        super.setAdapter(adapter);
-        if (adapter != null) {
-            adapter.registerAdapterDataObserver(dataObserver);
-        }
-        dataObserver.onChanged();
-    }
-
-    public void hideIfEmpty(View ...view) {
-        nonEmptyViews = Arrays.asList(view);
-    }
-
-    public void showIfEmpty(View ...emptyView) {
-        emptyViews = Arrays.asList(emptyView);
-    }
-
     private void toggleViews() {
-        if (adapterIsInitialized()) {
-            if (adapterIsEmpty()) {
-                Util.showViews(emptyViews);
-                setVisibility(GONE);
-                Util.hideViews(nonEmptyViews);
+        if (getAdapter() != null && !mEmptyViews.isEmpty() && !mNonEmptyViews.isEmpty()) {
+            if (getAdapter().getItemCount() == 0) {
+
+                //show all the empty views
+                Util.showViews(mEmptyViews);
+                //hide the RecyclerView
+                setVisibility(View.GONE);
+
+                //hide all the views which are meant to be hidden
+                Util.hideViews(mNonEmptyViews);
             } else {
-                Util.showViews(nonEmptyViews);
-                setVisibility(VISIBLE);
-                Util.hideViews(emptyViews);
+                //hide all the empty views
+                Util.showViews(mNonEmptyViews);
+
+                //show the RecyclerView
+                setVisibility(View.VISIBLE);
+
+                //hide all the views which are meant to be hidden
+                Util.hideViews(mEmptyViews);
             }
         }
     }
 
-    private boolean adapterIsEmpty() {
-        return getAdapter().getItemCount() == 0;
+    @Override
+    public void setAdapter(Adapter adapter) {
+        super.setAdapter(adapter);
+        if (adapter != null) {
+            adapter.registerAdapterDataObserver(mObserver);
+        }
+        mObserver.onChanged();
     }
 
-    private boolean adapterIsInitialized() {
-        return getAdapter() != null && !emptyViews.isEmpty() && !nonEmptyViews.isEmpty();
+    public void hideIfEmpty(View... views) {
+        mNonEmptyViews = Arrays.asList(views);
+    }
+
+    public void showIfEmpty(View... emptyViews) {
+        mEmptyViews = Arrays.asList(emptyViews);
     }
 }
