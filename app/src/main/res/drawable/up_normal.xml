@@ -4,9 +4,16 @@
         <shape>
             <size android:width="96dp" />
             <solid android:color="@color/purple" />
+            <corners
+                android:bottomLeftRadius="@dimen/corner_rounding_btn_add_it"
+                android:bottomRightRadius="@dimen/corner_rounding_btn_add_it"
+                android:topLeftRadius="@dimen/corner_rounding_btn_add_it"
+                android:topRightRadius="@dimen/corner_rounding_btn_add_it" />
         </shape>
     </item>
-    <item
-        android:drawable="@drawable/ic_up_normal"
-        android:gravity="center" />
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/ic_up_normal" />
+    </item>
 </layer-list>

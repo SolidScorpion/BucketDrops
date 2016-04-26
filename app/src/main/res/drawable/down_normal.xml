@@ -4,6 +4,11 @@
         <shape>
             <solid android:color="@color/purple" />
             <size android:width="96dp" />
+            <corners
+                android:bottomLeftRadius="@dimen/corner_rounding_btn_add_it"
+                android:bottomRightRadius="@dimen/corner_rounding_btn_add_it"
+                android:topLeftRadius="@dimen/corner_rounding_btn_add_it"
+                android:topRightRadius="@dimen/corner_rounding_btn_add_it" />
         </shape>
     </item>
     <item
