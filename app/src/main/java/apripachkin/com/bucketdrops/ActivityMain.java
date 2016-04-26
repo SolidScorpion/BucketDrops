@@ -96,6 +96,7 @@ public class ActivityMain extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initBackgroundImage();
         mRealm = Realm.getDefaultInstance();
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -116,7 +117,6 @@ public class ActivityMain extends AppCompatActivity {
         SimpleTouchCallback callback = new SimpleTouchCallback(mAdapter);
         ItemTouchHelper helper = new ItemTouchHelper(callback);
         helper.attachToRecyclerView(mRecycler);
-        initBackgroundImage();
     }
 
     @Override
