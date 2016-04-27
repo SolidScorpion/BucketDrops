@@ -53,7 +53,6 @@ public class DialogAdd extends DialogFragment {
         realm.copyToRealm(drop);
         realm.commitTransaction();
         realm.close();
-
     }
 
     @Nullable

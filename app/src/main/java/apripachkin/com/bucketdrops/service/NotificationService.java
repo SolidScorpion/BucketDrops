@@ -1,9 +1,13 @@
 package apripachkin.com.bucketdrops.service;
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.content.Intent;
 
+import apripachkin.com.bucketdrops.ActivityMain;
+import apripachkin.com.bucketdrops.R;
 import apripachkin.com.bucketdrops.beans.Drop;
+import br.com.goncalves.pugnotification.notification.PugNotification;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -28,7 +32,7 @@ public class NotificationService extends IntentService {
             RealmResults<Drop> completed = realm.where(Drop.class).equalTo("completed", false).findAll();
             for (Drop drop : completed) {
                 if (isNotificationNeeded(drop.getAdded(), drop.getWhen())) {
-
+                    fireNotification(drop);
                 }
             }
         } finally {
@@ -36,6 +40,22 @@ public class NotificationService extends IntentService {
                 realm.close();
             }
         }
+    }
+
+    private void fireNotification(Drop drop) {
+        String message = getString(R.string.push_message) + "\"" + drop.getWhat() + "\"";
+        PugNotification.with(this)
+                .load()
+                .title(R.string.push_title)
+                .message(message)
+                .bigTextStyle(R.string.push_message_large)
+                .smallIcon(R.drawable.ic_drop)
+                .largeIcon(R.drawable.ic_drop)
+                .flags(Notification.DEFAULT_ALL)
+                .autoCancel(true)
+                .click(ActivityMain.class)
+                .simple()
+                .build();
     }
 
     private boolean isNotificationNeeded(long added, long when) {
