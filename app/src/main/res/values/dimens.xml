@@ -24,4 +24,5 @@
     <dimen name="dialog_padding">24dp</dimen>
     <dimen name="no_item_paddingB">22dp</dimen>
     <dimen name="no_item_paddingT">22dp</dimen>
+    <dimen name="bpv_space">16dp</dimen>
 </resources>

@@ -54,6 +54,7 @@ public class DialogMark extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         mBtnClose = (ImageButton) view.findViewById(R.id.btn_close);
         mBtnCompleted = (Button) view.findViewById(R.id.btn_completed);
+        AppBucketDrops.setSetRalewayThinFont(getContext(), mBtnCompleted);
         mBtnClose.setOnClickListener(mBtnClickListener);
         mBtnCompleted.setOnClickListener(mBtnClickListener);
     }

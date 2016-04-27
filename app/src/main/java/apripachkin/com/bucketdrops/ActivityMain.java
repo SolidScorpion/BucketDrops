@@ -102,7 +102,6 @@ public class ActivityMain extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         mBtnAdd = (Button) findViewById(R.id.btn_add);
         mBtnAdd.setOnClickListener(mBtnAddListener);
-
         int filterOption = AppBucketDrops.load(this);
         loadResults(filterOption);
         mEmptyView = findViewById(R.id.empty_drops);
@@ -114,6 +113,7 @@ public class ActivityMain extends AppCompatActivity {
         mAdapter = new AdapterDrops(this, mRealm, mResults, mAddListener, mMarkListener, mResetListener);
         mAdapter.setHasStableIds(true);
         mRecycler.setAdapter(mAdapter);
+        AppBucketDrops.setSetRalewayThinFont(this, mBtnAdd);
         SimpleTouchCallback callback = new SimpleTouchCallback(mAdapter);
         ItemTouchHelper helper = new ItemTouchHelper(callback);
         helper.attachToRecyclerView(mRecycler);

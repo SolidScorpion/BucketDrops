@@ -1,20 +1,17 @@
 package apripachkin.com.bucketdrops.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import apripachkin.com.bucketdrops.AppBucketDrops;
 import apripachkin.com.bucketdrops.R;
 import apripachkin.com.bucketdrops.beans.Drop;
-import apripachkin.com.bucketdrops.extras.Util;
+import apripachkin.com.bucketdrops.viewholders.DropHolder;
+import apripachkin.com.bucketdrops.viewholders.FooterHolder;
+import apripachkin.com.bucketdrops.viewholders.NoItemsHolder;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -149,76 +146,4 @@ public class AdapterDrops extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         }
     }
 
-    public static class DropHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        TextView mTextWhat;
-        TextView mTextWhen;
-        MarkListener mMarkListener;
-        Context mContext;
-        View mItemView;
-
-        public DropHolder(View itemView, MarkListener listener) {
-            super(itemView);
-            mItemView = itemView;
-            mContext = itemView.getContext();
-            itemView.setOnClickListener(this);
-            mTextWhat = (TextView) itemView.findViewById(R.id.tv_what);
-            mTextWhen = (TextView) itemView.findViewById(R.id.tv_when);
-            mMarkListener = listener;
-        }
-
-        public void setWhat(String what) {
-            mTextWhat.setText(what);
-        }
-
-        @Override
-        public void onClick(View v) {
-            mMarkListener.onMark(getAdapterPosition());
-        }
-
-        public void setBackground(boolean completed) {
-            Drawable drawable;
-            if (completed) {
-                drawable = ContextCompat.getDrawable(mContext, R.color.bg_drop_complete);
-            } else {
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.bg_row_drop);
-            }
-            Util.setBackground(mItemView, drawable);
-        }
-
-        public void setWhen(long when) {
-            mTextWhen.setText(DateUtils.getRelativeTimeSpanString(when, System.currentTimeMillis(), DateUtils.DAY_IN_MILLIS, DateUtils.FORMAT_ABBREV_ALL));
-        }
-    }
-
-    public static class NoItemsHolder extends RecyclerView.ViewHolder {
-
-        public NoItemsHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    public static class FooterHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        Button mBtnAdd;
-        AddListener mListener;
-
-        public FooterHolder(View itemView) {
-            super(itemView);
-            mBtnAdd = (Button) itemView.findViewById(R.id.btn_footer);
-            mBtnAdd.setOnClickListener(this);
-        }
-
-        public FooterHolder(View itemView, AddListener listener) {
-            super(itemView);
-            mBtnAdd = (Button) itemView.findViewById(R.id.btn_footer);
-            mBtnAdd.setOnClickListener(this);
-            mListener = listener;
-        }
-
-        @Override
-        public void onClick(View v) {
-            mListener.add();
-        }
-    }
 }
