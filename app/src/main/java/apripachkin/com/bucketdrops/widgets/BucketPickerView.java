@@ -3,6 +3,8 @@ package apripachkin.com.bucketdrops.widgets;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -19,15 +21,35 @@ import apripachkin.com.bucketdrops.R;
  * Created by root on 26.04.16.
  */
 public class BucketPickerView extends LinearLayout implements View.OnTouchListener {
+    public static final int DELAY = 250;
     private static final int LEFT = 0;
     private static final int RIGHT = 2;
     private static final int TOP = 1;
     private static final int BOTTOM = 3;
+    private static final int MESSAGE_WHAT = 100500;
     private TextView mDay;
     private TextView mMonth;
     private TextView mYear;
     private Calendar calendar;
     private SimpleDateFormat simpleDateFormat;
+    private int activeId;
+    private boolean mIncrement, mDecrement;
+
+    private Handler mHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (mIncrement) {
+                increment(activeId);
+            }
+            if (mDecrement) {
+                decrement(activeId);
+            }
+            if (mIncrement || mDecrement) {
+                mHandler.sendEmptyMessageDelayed(MESSAGE_WHAT, DELAY);
+            }
+            return true;
+        }
+    });
 
     public BucketPickerView(Context context) {
         super(context);
@@ -104,17 +126,32 @@ public class BucketPickerView extends LinearLayout implements View.OnTouchListen
             Rect bottomBounds = compoundDrawables[BOTTOM].getBounds();
             float x = event.getX();
             float y = event.getY();
+            activeId = textView.getId();
             if (topDrawableHit(textView, topBounds.height(), x, y)) {
                 if (isActionDown(event)) {
+                    mIncrement = true;
                     increment(textView.getId());
+                    mHandler.removeMessages(MESSAGE_WHAT);
+                    mHandler.sendEmptyMessageDelayed(MESSAGE_WHAT, DELAY);
+                }
+
+                if (isActionUpOrCancel(event)) {
+                    mIncrement = false;
                 }
 
             } else if (bottomDrawableHit(textView, bottomBounds.height(), x, y)) {
                 if (isActionDown(event)) {
+                    mDecrement = true;
                     decrement(textView.getId());
+                    mHandler.removeMessages(MESSAGE_WHAT);
+                    mHandler.sendEmptyMessageDelayed(MESSAGE_WHAT, DELAY);
+                }
+                if (isActionUpOrCancel(event)) {
+                    mDecrement = false;
                 }
             } else {
-
+                mIncrement = false;
+                mDecrement = false;
             }
 
         }
@@ -189,4 +226,9 @@ public class BucketPickerView extends LinearLayout implements View.OnTouchListen
     private boolean isActionDown(MotionEvent event) {
         return event.getAction() == MotionEvent.ACTION_DOWN;
     }
+
+    private boolean isActionUpOrCancel(MotionEvent event) {
+        return event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL;
+    }
+
 }
