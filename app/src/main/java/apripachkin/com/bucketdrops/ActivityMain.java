@@ -1,8 +1,5 @@
 package apripachkin.com.bucketdrops;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -26,7 +23,7 @@ import apripachkin.com.bucketdrops.adapters.MarkListener;
 import apripachkin.com.bucketdrops.adapters.ResetListener;
 import apripachkin.com.bucketdrops.adapters.SimpleTouchCallback;
 import apripachkin.com.bucketdrops.beans.Drop;
-import apripachkin.com.bucketdrops.service.NotificationService;
+import apripachkin.com.bucketdrops.extras.Util;
 import apripachkin.com.bucketdrops.widgets.BucketRecyclerView;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -121,10 +118,7 @@ public class ActivityMain extends AppCompatActivity {
         SimpleTouchCallback callback = new SimpleTouchCallback(mAdapter);
         ItemTouchHelper helper = new ItemTouchHelper(callback);
         helper.attachToRecyclerView(mRecycler);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Intent action = new Intent(this, NotificationService.class);
-        PendingIntent service = PendingIntent.getService(this, 100, action, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 1000, 5000, service);
+        Util.scheduleAlarm(this);
     }
 
     @Override
